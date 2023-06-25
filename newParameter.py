@@ -29,7 +29,7 @@ def crawling_subsidy(url):
         # print(contents_test)
         subsidy_list.append(contents_test.getText().replace('\n'," ")) #把抓到的前兩項內容先取文字後,放在串列中
     
-    result[titles] = subsidy_list #把服務跟資格做成字典的value
+    #result[titles] = subsidy_list #把服務跟資格做成字典的value
     print(url)
     print(titles)
     print(subsidy_list[0])
