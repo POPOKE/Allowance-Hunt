@@ -23,10 +23,10 @@ url_list.append(url_lowincome_elder)
 url_list.append(url_scholarship)
 url_list.append(url_passaway)
 
-criteria = {"birth":[],"students":[],"labor":[],"lowincome":[],"disabled":[],"elder":[],"house":[],"passaway":[],"other":[]}
+
 def crawling_subsidy(url):
     subsidy_list = []
-    
+    category_list = []
     response = requests.get(url , headers = headers)
     soup = BeautifulSoup(response.text, "html.parser")
     titles = soup.find("div", class_= "simple-text title").getText()
@@ -35,6 +35,27 @@ def crawling_subsidy(url):
     for contents_test in soup.findAll("div", class_= "css-tr", limit = 2):
         subsidy_list.append(contents_test.getText(strip = True)) #把抓到的前兩項內容先取文字後,放在串列中
         result[titles] = subsidy_list  #把服務跟資格做成字典的value
+    #name是津貼名稱, 指定進去
+    name = titles
+
+    
+    if re.findall(r'育兒|兒童|生育|育嬰|幼兒|早期療育', name):
+        category_list.append('birth')
+    if re.findall(r'獎學金|獎助學金|就學|教育|學費', name):
+        category_list.append('students')
+    if re.findall(r'國民年金|勞工|勞保|就業|職業災害|職災|職保|就保|失業|工作', name):
+        category_list.append('labor')
+    if re.findall(r'弱勢|中低收入|中低老人|經濟弱勢|低收入戶', name):
+        category_list.append('lowincome')
+    if re.findall(r'身心障礙|身障', name):
+        category_list.append('disabled')
+    if re.findall(r'老人|老年', name):
+        category_list.append('elder')
+    if re.findall(r'修繕|租賃|住屋|房屋|租金|住宅|租屋|購屋', name):
+        category_list.append('house')
+    if re.findall(r'喪葬|死亡|身故', name):
+        category_list.append('passaway')
+        
     #服務內容這邊的資料等於content_1_p
     content_1_p = result[titles][0]
     #把標題跟內文用slice方式分開取用
@@ -45,45 +66,14 @@ def crawling_subsidy(url):
     #把標題跟內文用slice方式分開取用
     content_2_title = result[titles][1][0:4]
     content_2 = result[titles][1][4:]
-    #name是津貼名稱, 指定進去
-    name = titles
+    #category是津貼種類, 指定進去,用join從category_list串列取出成字串
     print(name)
-    if re.findall(r'育兒|兒童|生育|育嬰|幼兒|早期療育', name):
-        criteria['birth'].append(name)
-    if re.findall(r'獎學金|獎助學金|就學|教育|學費', name):
-        criteria['students'].append(name)
-    if re.findall(r'國民年金|勞工|勞保|就業|職業災害|職災|職保|就保|失業|工作', name):
-        criteria['labor'].append(name)
-    if re.findall(r'弱勢|中低收入|中低老人|經濟弱勢|低收入戶', name):
-        criteria['lowincome'].append(name)
-    if re.findall(r'身心障礙', name):
-        criteria['disable'].append(name)
-    if re.findall(r'老人|老年', name):
-        criteria['elder'].append(name)
-    if re.findall(r'修繕|租賃|住屋|房屋|租金|住宅|租屋|購屋', name):
-        criteria['house'].append(name)
-    if re.findall(r'喪葬|死亡|身故', name):
-        criteria['passaway'].append(name)
-
-    
-
-
-    
+    category = ', '.join(category_list)
+    print(category)
+    #url是津貼網址, 指定進去
     url = url
     
-    #設定是我們要的標題才印出來
-
-
 
 # for u in url_list跑所有的網址
 for u in url_list:
     crawling_subsidy(u)
-    
-print('生育及育兒相關津貼:',criteria['birth'])
-print('學生相關津貼:',criteria['students'])
-print('國民年金及勞工相關津貼:',criteria['labor'])
-print('中低收入相關津貼:',criteria['lowincome'])
-print('身心障礙相關津貼:',criteria['disabled'])
-print('長者礙相關津貼:',criteria['elder'])
-print('房屋相關津貼:',criteria['house'])
-print('親屬身故給付相關津貼:',criteria['passaway'])
