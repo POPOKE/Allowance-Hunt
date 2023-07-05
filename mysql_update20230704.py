@@ -14,7 +14,7 @@ f = open('crawling_result.txt', 'r', encoding="utf-8")
 
 while True:
     try:
-        line = f.readline().strip()  #消除換行
+        line = f.readline().strip()  #消除換行符號
         if line == "":
             break
         else:
@@ -29,6 +29,8 @@ while True:
             cursor.execute(sql, new_data)  # 執行指令
             db.commit()  # 提交至SQL指令
             print('success')
+    except EOFError:
+        break
 
 # 發生錯誤時停止執行SQL
     except Exception as e:
