@@ -14,7 +14,7 @@ f = open('crawling_result.txt', 'r', encoding="utf-8")
 
 while True:
     try:
-        line = f.readline().strip()  # 去除换行符
+        line = f.readline().strip()  #消除換行
         if line == "":
             break
         else:
