@@ -14,7 +14,7 @@ sql = "INSERT INTO AllowanceDetails(serial_no, name, category, organization_name
 f = open('crawling_result.txt','r', encoding="utf-8")
 
 while True:
-    try:
+    try:                               #增加 if f.readline()=="": 可以停止迴圈但會讓資料錯排???
         serial_no = f.readline()
         name = f.readline()
         category = f.readline()
