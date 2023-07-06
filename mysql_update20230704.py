@@ -8,7 +8,7 @@ passaway
 無
 https://www.gov.tw/News3_Content.aspx?n=2&s=371250
 '''
-#注意載入檔名
+#注意載入檔名!!!
 #####以上可刪除
 
 import pymysql
@@ -23,7 +23,7 @@ cursor = db.cursor()
 # 新增資料語法insertinto
 sql = "INSERT INTO AllowanceDetails(serial_no, name, category, organization_name, url, content, condition_list) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 # 開啟更新檔(記得修改檔案的相對路徑)
-f = open('crawling_result.txt', 'r', encoding="utf-8")
+f = open('crawling_result_0706.txt', 'r', encoding="utf-8")
 
 while True:
     try:
@@ -41,7 +41,7 @@ while True:
             new_data = (serial_no, name, category, organization_name, url_, content, condition_list)
             cursor.execute(sql, new_data)  # 執行指令
             db.commit()  # 提交至SQL指令
-            print('success')
+            print(name,'success')
     except EOFError:
         break
 
@@ -53,13 +53,14 @@ while True:
             values = (serial_no, category, organization_name, url_, content, condition_list, name)
             cursor.execute(update_subsidy, values)
             db.commit()
-            print('update')
+            print(name,'update')
             continue
         else:
-            print('error')
+            print(name,'error')
             print(e)
             break
 
-# 關閉連線
+# 關閉連線,關閉檔案
+f.close()
 db.close()
 
